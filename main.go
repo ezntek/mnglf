@@ -4,6 +4,7 @@ import (
 	"image/color"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
+	"github.com/tek967/mnglf/ball"
 	pl "github.com/tek967/rgbapalette"
 )
 
@@ -31,10 +32,15 @@ func main() {
 	rl.InitWindow(width, height, "mnglf")
 	rl.SetTargetFPS(60)
 
+	golfBall := ball.New(12, float32(width)/2-12, float32(height)/2-12, pl.Palette["darkgreen"])
+
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		drawCheckerboardBG(16, pl.Palette["lightgreen"], color.RGBA{139, 229, 139, 255})
 		rl.ClearBackground(pl.Palette["verylightgray"])
+		// draw functions
+		golfBall.Draw()
+		// ---
 		rl.EndDrawing()
 	}
 }
