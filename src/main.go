@@ -4,7 +4,7 @@ import (
 	"image/color"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
-	"github.com/tek967/mnglf/ball"
+	"github.com/tek967/mnglf/src/ball"
 	pl "github.com/tek967/rgbapalette"
 )
 
