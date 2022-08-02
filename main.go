@@ -8,7 +8,7 @@ import (
 	pl "github.com/tek967/rgbapalette"
 )
 
-const (
+var (
 	width  int32 = 1024
 	height int32 = 768
 )
@@ -35,6 +35,9 @@ func main() {
 	golfBall := ball.New(12, float32(width)/2-12, float32(height)/2-12, pl.Palette["darkgreen"])
 
 	for !rl.WindowShouldClose() {
+		golfBall.Update(&width, &height)
+
+		// drawing
 		rl.BeginDrawing()
 		drawCheckerboardBG(16, pl.Palette["lightgreen"], color.RGBA{139, 229, 139, 255})
 		rl.ClearBackground(pl.Palette["verylightgray"])
@@ -42,5 +45,6 @@ func main() {
 		golfBall.Draw()
 		// ---
 		rl.EndDrawing()
+		// ---
 	}
 }
