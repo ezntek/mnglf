@@ -13,7 +13,7 @@ import (
 )
 
 type Ball struct {
-	powerMeter            powermeter.PowerMeter
+	powerMeter            *powermeter.PowerMeter
 	isBallMoving          bool
 	Radius                float32
 	Position              rl.Vector2
@@ -26,6 +26,14 @@ type Ball struct {
 
 func GetDistance(a, b rl.Vector2) float32 {
 	return float32(math.Sqrt(math.Pow(math.Abs(float64(a.X)-float64(a.Y)), 2) + math.Pow(math.Abs(float64(a.Y)-float64(b.Y)), 2)))
+}
+
+func GetPowerLevelForMeter(a, b rl.Vector2) float32 {
+	absoluteDistance := GetDistance(rl.NewVector2(float32(math.Abs(float64(a.X))), float32(math.Abs(float64(a.Y)))), rl.NewVector2(float32(math.Abs(float64(b.X))), float32(math.Abs(float64(b.Y))))) / 100
+	if absoluteDistance > 1 {
+		absoluteDistance = 1
+	}
+	return absoluteDistance
 }
 
 func (b *Ball) Draw() {
@@ -57,7 +65,6 @@ func (b *Ball) Collision(sw, sh *int32) {
 func (b *Ball) Update(sw, sh *int32) {
 	b.Collision(sw, sh)
 	b.powerMeter.Position.X, b.powerMeter.Position.Y = b.Position.X-25, b.Position.Y+35
-	b.powerMeter.IsHidden = b.isBallMoving
 
 	if !b.isBallMoving {
 		if rl.IsMouseButtonPressed(rl.MouseLeftButton) {
@@ -67,6 +74,8 @@ func (b *Ball) Update(sw, sh *int32) {
 
 		if rl.IsMouseButtonDown(rl.MouseLeftButton) && b.initialCursorPosition.X != 0 && b.initialCursorPosition.Y != 0 {
 			b.mouseCurrentPosition = rl.GetMousePosition()
+			b.powerMeter.IsHidden = false
+			b.powerMeter.FillPercent = GetPowerLevelForMeter(b.initialCursorPosition, b.mouseCurrentPosition)
 		}
 		if rl.IsMouseButtonReleased(rl.MouseLeftButton) {
 			b.isBallMoving = true
@@ -76,6 +85,7 @@ func (b *Ball) Update(sw, sh *int32) {
 
 			b.mouseCurrentPosition.X, b.mouseCurrentPosition.Y = 0, 0
 			b.initialCursorPosition.X, b.initialCursorPosition.Y = 0, 0
+			b.powerMeter.IsHidden = true
 		}
 	}
 	if b.isBallMoving {
@@ -110,7 +120,7 @@ func (b *Ball) Update(sw, sh *int32) {
 
 func New(radius float32, x, y float32, color color.RGBA) *Ball {
 	return &Ball{
-		powerMeter: *powermeter.New(rl.NewVector2(x-25, y+35), 0.5),
+		powerMeter: powermeter.New(rl.NewVector2(x-25, y+35), 0),
 		Radius:     radius,
 		friction:   1.2,
 		Position:   rl.NewVector2(x, y),

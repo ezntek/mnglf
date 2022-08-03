@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"image/color"
+	"os/exec"
+	"strings"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
 	"github.com/tek967/mnglf/src/ball"
@@ -33,7 +35,9 @@ func main() {
 	rl.InitWindow(width, height, "mnglf")
 	rl.SetTargetFPS(60)
 
-	JetBrainsMonoBold := rl.LoadFont("res/JetBrainsMono-Bold.ttf")
+	projPath, _ := exec.Command("git", "rev-parse", "--show-toplevel").Output()
+
+	JetBrainsMonoBold := rl.LoadFont(strings.TrimRight(string(projPath), "\n") + "/res/JetBrainsMono-Bold.ttf")
 
 	golfBall := ball.New(17, float32(width)/2-12, float32(height)/2-12, pl.Palette["darkgreen"])
 
