@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image/color"
 
 	rl "github.com/gen2brain/raylib-go/raylib"
@@ -32,7 +33,9 @@ func main() {
 	rl.InitWindow(width, height, "mnglf")
 	rl.SetTargetFPS(60)
 
-	golfBall := ball.New(12, float32(width)/2-12, float32(height)/2-12, pl.Palette["darkgreen"])
+	JetBrainsMonoBold := rl.LoadFont("res/JetBrainsMono-Bold.ttf")
+
+	golfBall := ball.New(17, float32(width)/2-12, float32(height)/2-12, pl.Palette["darkgreen"])
 
 	for !rl.WindowShouldClose() {
 		golfBall.Update(&width, &height)
@@ -41,6 +44,8 @@ func main() {
 		rl.BeginDrawing()
 		drawCheckerboardBG(16, pl.Palette["lightgreen"], color.RGBA{139, 229, 139, 255})
 		rl.ClearBackground(pl.Palette["verylightgray"])
+		rl.DrawTextEx(JetBrainsMonoBold, fmt.Sprintf("(VEL: %0.2f, %0.2f; POS: %0.2f, %0.2f)", golfBall.Velocity.X, golfBall.Velocity.Y, golfBall.Velocity.X, golfBall.Position.Y), rl.NewVector2(20, 20), 30, float32(JetBrainsMonoBold.BaseSize/6), rl.Black)
+
 		// draw functions
 		golfBall.Draw()
 		// ---
